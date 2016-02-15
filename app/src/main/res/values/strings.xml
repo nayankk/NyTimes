@@ -2,4 +2,6 @@
     <string name="app_name">NyTimes</string>
     <string name="enter_search_query">Enter search query</string>
     <string name="search">Search</string>
+    <string name="search_toolbar">Search</string>
+    <string name="filter_title">Filter your results</string>
 </resources>

@@ -1,9 +1,12 @@
-package com.xc0ffee.nytimes;
+package com.xc0ffee.nytimes.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.xc0ffee.nytimes.R;
+import com.xc0ffee.nytimes.models.Article;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 

@@ -1,9 +1,12 @@
-package com.xc0ffee.nytimes;
+package com.xc0ffee.nytimes.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -11,9 +14,12 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.xc0ffee.nytimes.R;
+import com.xc0ffee.nytimes.adapters.ArticleArrayAdapter;
+import com.xc0ffee.nytimes.fragments.SettingsDialogFragement;
+import com.xc0ffee.nytimes.models.Article;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +46,9 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         etQuery = (EditText) findViewById(R.id.et_text);
         btSearch = (Button) findViewById(R.id.bt_searchBtn);
@@ -78,5 +87,28 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter:
+                onFilterClicked();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onFilterClicked() {
+        FragmentManager fm = getSupportFragmentManager();
+        SettingsDialogFragement settingsDialog = SettingsDialogFragement.newInstance("Filter your search");
+        settingsDialog.show(fm, "settings_fragement");
     }
 }

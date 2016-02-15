@@ -1,4 +1,4 @@
-package com.xc0ffee.nytimes;
+package com.xc0ffee.nytimes.adapters;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
+import com.xc0ffee.nytimes.R;
+import com.xc0ffee.nytimes.models.Article;
 
 import java.util.List;
 

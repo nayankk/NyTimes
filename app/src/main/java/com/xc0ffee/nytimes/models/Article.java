@@ -1,6 +1,4 @@
-package com.xc0ffee.nytimes;
-
-import com.loopj.android.http.AsyncHttpClient;
+package com.xc0ffee.nytimes.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
