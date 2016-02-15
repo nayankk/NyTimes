@@ -149,12 +149,13 @@ public class SettingsDialogFragement extends android.support.v4.app.DialogFragme
 
     private void setDefaults() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (!TextUtils.isEmpty(pref.getString("newest", ""))) {
-            mCbNewest.setChecked(true);
-            mCbOldest.setChecked(false);
-        } else {
-            mCbOldest.setChecked(true);
+        String sortOrder = pref.getString("sortorder", "");
+        if (!TextUtils.isEmpty(sortOrder) && sortOrder.contains("oldest")) {
             mCbNewest.setChecked(false);
+            mCbOldest.setChecked(true);
+        } else {
+            mCbOldest.setChecked(false);
+            mCbNewest.setChecked(true);
         }
 
         String deskString = pref.getString("desk", "");
@@ -164,11 +165,12 @@ public class SettingsDialogFragement extends android.support.v4.app.DialogFragme
 
         String dateString = pref.getString("date", "");
         if (!TextUtils.isEmpty(dateString)) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.US);
+            SimpleDateFormat format = new SimpleDateFormat("yyyymmdd hh:mm:ss", Locale.US);
             try {
-                Date date = format.parse(dateString);
+                Date date = format.parse(dateString + " " + "01:01:01");
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(date.getYear(), date.getMonth(), date.getDay());
+                newDate.setTime(date);
                 SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.US);
                 mDateTv.setText(formatter.format(newDate.getTime()));
             } catch (ParseException e) {}
