@@ -1,10 +1,13 @@
 package com.xc0ffee.nytimes.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +31,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
@@ -35,12 +40,12 @@ public class SearchActivity extends AppCompatActivity {
     private static final String BASE_URL = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
     private static final String API_KEY = "4a9eb816606d015507181f245b7c91b6:0:74411814";
 
-    EditText etQuery;
-    Button btSearch;
-    GridView gridView;
+    @Bind(R.id.et_text) EditText etQuery;
+    @Bind(R.id.bt_searchBtn) Button btSearch;
+    @Bind(R.id.gv_results) GridView gridView;
 
     List<Article> mArticleList = new ArrayList<>();
-    ArticleArrayAdapter mAdapter;
+    private ArticleArrayAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +55,7 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        etQuery = (EditText) findViewById(R.id.et_text);
-        btSearch = (Button) findViewById(R.id.bt_searchBtn);
-        gridView = (GridView) findViewById(R.id.gv_results);
+        ButterKnife.bind(this);
 
         mAdapter = new ArticleArrayAdapter(this, mArticleList);
         gridView.setAdapter(mAdapter);
@@ -75,6 +78,17 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key", API_KEY);
         params.put("q", query);
         params.put("page", 0);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String beginDate = pref.getString("date", "");
+        if (!TextUtils.isEmpty(beginDate)) params.put("begin_date", beginDate);
+
+        String sortSettiing = pref.getString("sortorder", "");
+        if (!TextUtils.isEmpty(sortSettiing)) params.put("sort", sortSettiing);
+
+        String newsDeskString = pref.getString("desk", "");
+        if (!TextUtils.isEmpty(newsDeskString)) params.put("fq", "news_desk:(" + newsDeskString + ")");
+
         client.get(BASE_URL, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
