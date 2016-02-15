@@ -68,16 +68,24 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        gridView.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                loadMoreData(page);
+                return true;
+            }
+        });
     }
 
-    public void onArticleSearch(View view) {
+    private void loadMoreData(int offset) {
         String query = etQuery.getText().toString();
         AsyncHttpClient client = new AsyncHttpClient();
 
         RequestParams params = new RequestParams();
         params.put("api-key", API_KEY);
         params.put("q", query);
-        params.put("page", 0);
+        params.put("page", offset);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         String beginDate = pref.getString("date", "");
@@ -101,6 +109,12 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void onArticleSearch(View view) {
+        // Clear previous result
+        mAdapter.clear();
+        loadMoreData(0);
     }
 
     @Override

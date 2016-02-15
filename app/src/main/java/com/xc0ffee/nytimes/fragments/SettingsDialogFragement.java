@@ -18,9 +18,11 @@ import android.widget.EditText;
 
 import com.xc0ffee.nytimes.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -91,6 +93,8 @@ public class SettingsDialogFragement extends android.support.v4.app.DialogFragme
             }
         });
 
+        setDefaults();
+
         String title = getArguments().getString("title", "Filter your results");
         mToolbar.setTitle(title);
     }
@@ -138,7 +142,36 @@ public class SettingsDialogFragement extends android.support.v4.app.DialogFragme
         String deskListString = TextUtils.join(" ", deskList);
         editor.putString("desk", deskListString);
 
-        editor.apply();
+        editor.commit();
+
         dismiss();
+    }
+
+    private void setDefaults() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (!TextUtils.isEmpty(pref.getString("newest", ""))) {
+            mCbNewest.setChecked(true);
+            mCbOldest.setChecked(false);
+        } else {
+            mCbOldest.setChecked(true);
+            mCbNewest.setChecked(false);
+        }
+
+        String deskString = pref.getString("desk", "");
+        if (deskString.contains("arts")) mCbArts.setChecked(true);
+        if (deskString.contains("fashion")) mCbFashion.setChecked(true);
+        if (deskString.contains("sports")) mCbSports.setChecked(true);
+
+        String dateString = pref.getString("date", "");
+        if (!TextUtils.isEmpty(dateString)) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.US);
+            try {
+                Date date = format.parse(dateString);
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(date.getYear(), date.getMonth(), date.getDay());
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.US);
+                mDateTv.setText(formatter.format(newDate.getTime()));
+            } catch (ParseException e) {}
+        }
     }
 }
