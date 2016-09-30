@@ -1,6 +1,6 @@
 *NyTimes* is an android app that fetches the articles from New York Times API's and displays them in a Grid View. User can also filter the search results using custom filters. 
 
-Completed user stories:
+User stories:
 
  * User can enter a search query that will display a grid of news articles using the thumbnail and headline from the New York Times Search API
  * User can click on "settings" which allows selection of advanced search options to filter results. 
